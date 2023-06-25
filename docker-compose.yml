@@ -1,0 +1,22 @@
+version: '3.1'
+
+services:
+  trd_frontend:
+    restart: always
+    build: .
+    working_dir: /app
+    container_name: trd_frontend
+    networks:
+      - trd_service
+    environment:
+      NODE_ENV: development
+      RESOURCE_BASE_URL: "http://1.10.143.146:1034"
+      RESOURCE_NAME: "trd_frontend"
+    ports:
+      - 8081:8081
+    command: yarn start
+
+networks:
+  trd_service: 
+    # driver: bridge
+    name: trd-network
