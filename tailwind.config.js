@@ -8,18 +8,16 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        imgtop: "url('/images/img1.jpg')",
-        imgbuttom: "url('/images/img2.jpg')",
+        imgtop: "url('/images/1.png')",
+        imgbuttom: "url('/images/2.png')",
       },
-      width:
-      {
-        'imgtop': '600px',
-        'imgbuttom': '600px',
+      width: {
+        imgtop: "400px",
+        imgbuttom: "400px",
       },
-      height:
-      {
-        'imgtop': '300px',
-        'imgbuttom': '300px',
+      height: {
+        imgtop: "300px",
+        imgbuttom: "300px",
       },
       colors: {
         primary: {
