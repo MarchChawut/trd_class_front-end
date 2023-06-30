@@ -15,7 +15,9 @@ export default function FirstPage() {
   const [open, setOpen] = React.useState(false);
   const [msg, setMsg] = React.useState<IResData>({ code: 1, resData: "" });
   const [member, setMember] = React.useState("กรุณาเลือก");
-  const [subjects, setSubjects] = React.useState([]);
+  const [subjects, setSubjects] = React.useState([{
+    ID: String,
+  }]);
 
   useEffect(() => {
     xRequest.get("/class/subjects", {}).then((response) => {
