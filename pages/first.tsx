@@ -15,13 +15,12 @@ export default function FirstPage() {
   const [open, setOpen] = React.useState(false);
   const [msg, setMsg] = React.useState<IResData>({ code: 1, resData: "" });
   const [member, setMember] = React.useState("กรุณาเลือก");
-  const [subjects, setSubjects] = React.useState([{
-    ID: String,
-  }]);
+  const [subjects, setSubjects] = React.useState({ ID: String,});
 
   useEffect(() => {
     xRequest.get("/class/subjects", {}).then((response) => {
       setSubjects(response.data.resData);
+      
     });
   }, []);
 
@@ -98,9 +97,9 @@ export default function FirstPage() {
           </Modal>
           <div className="w-full rounded-lg  md:mt-0 sm:max-w-md xl:p-0">
             <div className="p-1 space-y-1 md:space-y-2 sm:p-8">
-              <h1 className="text-2xl font-bold leading-tight tracking-tight md:text-2xl ">
+              {/* <h1 className="text-2xl font-bold leading-tight tracking-tight md:text-2xl ">
                 ลงทะเบียนเรียน
-              </h1>
+              </h1> */}
               <form
                 className="w-96 space-y-1 md:space-y-2"
                 onSubmit={submitDataForRegister}
