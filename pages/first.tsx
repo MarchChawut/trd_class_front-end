@@ -4,21 +4,14 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { xRequest } from "../utils/request";
 import getConfig from "next/config";
-import { InputLabel, MenuItem, Select } from "@mui/material";
-import { useRouter } from "next/router";
+import { Backdrop, CircularProgress, InputLabel, MenuItem, Select } from "@mui/material";
+import Generate from "./qr";
+
 const { publicRuntimeConfig } = getConfig();
 
-
-export interface IResData {
-  code: number;
-  resData: string;
-}
-export default function FirstPage() {
-  const [open, setOpen] = React.useState(false);
-  const [msg, setMsg] = React.useState<IResData>({ code: 1, resData: "" });
+function RegisterLayout({setShowQr, setEnrollResponse, handleOpen}) {
   const [member, setMember] = React.useState("กรุณาเลือก");
   const [subjects, setSubjects] = React.useState({ ID: String });
-  const router = useRouter();
   useEffect(() => {
     xRequest.get("/class/subjects", {}).then((response) => {
       setSubjects(response.data.resData);
@@ -28,28 +21,10 @@ export default function FirstPage() {
   const handleChange = (event) => {
     setMember(event.target.value);
   };
-  const style = {
-    position: "absolute" as "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   async function submitDataForRegister() {
+    handleOpen(true)
     const title = (document.querySelector("#title") as HTMLInputElement).value;
-    const firstlastname = (
-      document.querySelector("#firstlastname") as HTMLInputElement
-    ).value;
-
+    const firstlastname = (document.querySelector("#firstlastname") as HTMLInputElement).value;
     const email = (document.querySelector("#email") as HTMLInputElement).value;
 
     event.preventDefault();
@@ -60,13 +35,19 @@ export default function FirstPage() {
       member: member,
       classroomid: subjects.ID,
     };
+
     xRequest
       .post("/register/enroll", {
         data: body,
       })
       .then((response) => {
-        setMsg(response.data);
-        setOpen(true);
+        console.log(response.data)
+        setEnrollResponse(response.data);
+
+        setShowQr(true)
+        handleOpen(false)
+          // router.push("/qr");
+          // return <Generate />
       });
 
     return false;
@@ -79,22 +60,9 @@ export default function FirstPage() {
         className="grid justify-center items-center md:w-2/4 md:h-2/4"
       >
         <h1 className="bg-imgtop bg-contain bg-no-repeat h-imgtop w-imgtop mx-auto"></h1>
-        {/* <h1 className="bg-imgbuttom bg-contain bg-no-repeat h-imgbuttom w-imgbuttom bg-center"></h1> */}
       </section>
       <section id="rightComponent" className="justify-center items-center ">
         <div className="flex flex-col items-center justify-center ">
-          {/* <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box sx={style}>
-              <Typography id="modal-modal-description" sx={{ mt: 1 }}>
-                {msg.resData}
-              </Typography>
-            </Box>
-          </Modal> */}
           <div className="w-full rounded-lg  md:mt-0 sm:max-w-md xl:p-0 content-center">
             <div className="p-1 space-y-1 md:space-y-2 sm:p-8 grid justify-items-center">
               <h1 className="text-3xl font-bold leading-tight tracking-tight md:text-3xl ">
@@ -221,9 +189,7 @@ export default function FirstPage() {
                 <button
                   type="submit"
                   className="w-full text-white bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-2xl px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800"
-                  onClick={() => {
-                        router.push("/qr");
-                    }}
+                  
                       >
                   ลงทะเบียน
                 </button>
@@ -244,5 +210,32 @@ export default function FirstPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+export interface IResData {
+  code: number;
+  qr: string;
+  resData: string;
+}
+export default function FirstPage() {
+  const [showqr, setShowQr] = React.useState(false);
+  const [enrollResponse, setEnrollResponse] = React.useState<IResData>({ code: 1, qr: "", resData: "" });
+
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <div>
+      {showqr && <Generate qrCodeValue={enrollResponse.qr} />}
+      {!showqr && <RegisterLayout setShowQr={setShowQr} setEnrollResponse={setEnrollResponse} handleOpen={setOpen}/>}
+
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={open}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </div>
+    
   );
 }
