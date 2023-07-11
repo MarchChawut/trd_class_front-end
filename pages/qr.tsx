@@ -15,7 +15,7 @@ function Generate({qrCodeValue}) {
         `อยู่อย่างปลอดภัย บนโลกไซเบอร์`
       </h2>
       <br />
-      <QRCode value={qrCodeValue} />
+      {qrCodeValue && <QRCode value={qrCodeValue} />}
       <br />
       <h3>
         ทางผู้จัดสัมมนาได้จัดส่ง QR Code ไปยัง e-mail ที่ท่านได้ลงทะเบียนไว้
